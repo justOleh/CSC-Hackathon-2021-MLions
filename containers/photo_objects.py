@@ -1,5 +1,4 @@
 import numpy as np
-import plotters
 from itertools import groupby
 
 class PhotoObjects:
