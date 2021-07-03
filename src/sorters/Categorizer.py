@@ -1,4 +1,4 @@
-from src.sorters.AbstractSorter import AbstractSorter
+from src.sorters.abstract import AbstractSorter
 
 
 class Categorizer(AbstractSorter):
