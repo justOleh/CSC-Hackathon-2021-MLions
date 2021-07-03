@@ -39,6 +39,24 @@ class SegmentationModel:
 		seg_map = tf.squeeze(seg_map).numpy().astype(np.int8)
 		return seg_map
 
+	def segment_image_noresize(self, img:np.ndarray) -> np.ndarray:
+		"""
+			Performs image withought resize at the end
+		"""
+		img_width, img_height = img.size
+		input_img = self._preprocess_image_(img)
+		self.interpreter.set_tensor(self._input_details[0]['index'], input_img)
+		self.interpreter.invoke()
+
+		predictions = self.interpreter.tensor(
+			self.interpreter.get_output_details()[0]['index']
+		)()
+
+		# resize the image to originals size and find argmax for every pixel
+		seg_map = tf.argmax(tf.image.resize(predictions, (self.input_size[0], self.input_size[1])), axis=3)
+		seg_map = tf.squeeze(seg_map).numpy().astype(np.int8)
+		return seg_map
+
 	def _preprocess_image_(self, img:np.ndarray) -> np.ndarray:
 		# Prepare input image data.
 		resized_img = img.convert('RGB').resize(self.input_size, Image.ANTIALIAS)

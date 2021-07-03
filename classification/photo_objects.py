@@ -15,6 +15,7 @@ class PhotoObjects:
 		self.seg_map = seg_map.astype("uint8")
 		self.label_map = label_map
 		self.obj_dict = {}
+		self.vector_features = np.zeros(len(label_map))
 		self._find_objects_()
 
 	def _find_objects_(self):
@@ -27,9 +28,10 @@ class PhotoObjects:
 		# we have the array of objects - new we can determine the area of every objects and it's label
 		# note: if the obj is too small it's ignored
 		for obj in photo_objects:
-			obj_area = len(obj)
-			if obj_area / img_area < self.AREA_THRESHOLD:
+			obj_area = len(obj) / img_area
+			if obj_area < self.AREA_THRESHOLD:
 				# the object is too small skipping and updating the segmap
 				self.seg_map = np.where(self.seg_map == obj[0], 0, self.seg_map)
 				continue
 			self.obj_dict[self.label_map[obj[0]]] = obj_area
+			self.vector_features[obj[0]] = obj_area
