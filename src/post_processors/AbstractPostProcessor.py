@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class SorterAbstract(ABC):
+class AbstractPostProcessor(ABC):
 
     def __init__(self, input_path: str, output_path: str, config: dict):
         pass
