@@ -1,6 +1,6 @@
-from src import SegmentationModel
-from src import PhotoObjects
-from src import create_dataset, LogRegression
+from .segmentation import SegmentationModel
+from .classification import PhotoObjects
+from .classification import create_dataset, LogRegression
 from utils import visualize_segmentation
 from PIL import Image
 import tensorflow as tf
@@ -42,8 +42,7 @@ def train_classifier(dataset_path, make_dataset=False):
 
 
 if __name__ == "__main__":
-	# image_path = "dataset/test/IMG_4749.JPG"
-	# image_path = "dataset/test/IMG_7044.JPG"
-	# image_path = "dataset/labeled_imgs/01_People\\1.4.jpg"
+	image_path = "../data_samples/test/IMG_4749.JPG"
+	test_segmentation(image_path)
 
-	create_dataset("dataset/lbl_imgs/")
+	train_classifier("../data_samples/dataset.csv")
