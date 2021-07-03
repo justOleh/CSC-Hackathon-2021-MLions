@@ -4,14 +4,19 @@ import cv2 as cv
 import numpy as np
 
 
-class BlurRemoval(AbstractPostProcessor):
-    def __init__(self, input_path: str, output_path: str, config_path: str = 'configs/blur_removal.yml'):
-        super().__init__(input_path, output_path, config_path)
+class InferenceModel:
+    transforms = None
+    classes = ['clear', 'blur']
 
-        self.transforms = None
-        self.classes = ['clear', 'blur']
-        model = self._def_model()
-        self.model = self._load_model(model, self.config['weights'])
+    def __init__(self, model_weights_path: str):
+        self.model = self._def_model()
+        self.model.load_state_dict()
+
+    def __call__(self, img: np.ndarray) -> str:
+        img_norm = self._preprocess_img(img)
+        logits = self.model(img_norm)
+        class_id = torch.argmax(logits)
+        return self.classes[class_id]
 
     def _def_model(self) -> torch.Model:
         pass
@@ -19,12 +24,12 @@ class BlurRemoval(AbstractPostProcessor):
     def _preprocess_img(self, img: np.ndarray) -> torch.Tensor:
         pass
 
-    def _load_model(self, model: torch.Model, weights_path: str) -> torch.Model:
-        pass
 
-    def _model_inference(self, model: torch.Model, img: np.ndarray) -> str:
-        return 'clear'
-        # return 'blur'
+class BlurRemoval(AbstractPostProcessor):
+    def __init__(self, input_path: str, output_path: str, config_path: str = 'configs/blur_removal.yml'):
+        super().__init__(input_path, output_path, config_path)
+
+        self.model = InferenceModel(self.config['weights'])
 
     def process(self):
         pass
