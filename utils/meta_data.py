@@ -39,3 +39,4 @@ def get_place_taken(exif: Dict):
 if __name__ == '__main__':
     exif_data = get_exif_data(Image.open('../data_samples/IMG_5459.JPG'))
     print(get_date_taken(exif_data))
+    print(get_place_taken(exif_data))
