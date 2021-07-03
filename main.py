@@ -1,11 +1,11 @@
-from segmentation import SegmentationModel
+from src import SegmentationModel
+from src import PhotoObjects
+from src import create_dataset, LogRegression
 from utils import visualize_segmentation
-from classification import PhotoObjects
 from PIL import Image
 import tensorflow as tf
 import config
 import os
-from classification import create_dataset, LogRegression
 
 
 def test_segmentation(image_path:str):

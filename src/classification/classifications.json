@@ -1,0 +1,113 @@
+{
+	"People" : [
+		"person;individual;"
+	],
+
+	"Countryside": [
+		"grass",
+		"sky",
+		"tree",
+		"earth;ground",
+		"rock;stone",
+		"mountain;mount",
+		"waterfall;falls",
+		"plant;flora;plant;life",
+		"land;ground;soil",
+		"water",
+		"sea",
+		"sand",
+		"palm;palm;tree",
+		"boat",
+		"ship",
+		"river",
+		"lake"
+	],
+	"Urban" : [
+		"sidewalk;pavement",
+		"building;edifice",
+		"road;route",
+		"car;auto;automobile;machine;motorcar",
+		"minibike;motorbike",
+		"traffic;light;traffic;signal;stoplight",
+		"bus;autobus;coach;charabanc;double-decker;jitney;motorbus;motorcoach;omnibus;passenger;vehicle",
+		"truck;motortruck",
+		"van",
+		"fountain",
+		"house",
+		"streetlight;street;lamp",
+		"railing;rail",
+		"skyscraper",
+		"runway",
+		"tower",
+		"bar",
+		"bench",
+		"signboard;sign"
+	],
+
+	"House" : {
+		"Bedroom" : [
+			"bed",
+			"ceiling",
+			"mirror",
+			"armchair",
+			"rug;carpet;carpeting",
+			"pillow",
+			"wardrobe;closet;press"
+		],
+		"Kitchen" : [
+			"table",
+			"desk",
+			"kitchen;island",
+			"stove;kitchen;stove;range;kitchen;range;cooking;stove",
+			"washer;automatic;washer;washing;machine",
+			"refrigerator;icebox"
+		],
+		"Living room" : [
+			"seat",
+			"chair",
+			"sofa;couch;lounge",
+			"shelf",
+			"armchair",
+			"rug;carpet;carpeting",
+			"desk",
+			"pillow",
+			"fireplace;hearth;open;fireplace",
+			"cushion"
+		],
+		"Bathroom" : [
+			"shower",
+			"bathtub;bathing;tub;bath;tub"
+		]
+	},
+
+	"Nature" : [
+		"plant;flora;plant;life",
+		"pot;flowerpot",
+		"flower"
+	],
+
+	"Animals" : [
+		"animal;animate;being;beast;brute;creature;fauna"
+	],
+
+	"Objects" : {
+		"Food" : [
+			"food;solid;food",
+			"coffee;table;cocktail;table",
+			"glass;drinking;glass",
+			"bottle",
+			"plate",
+			"tray"
+		],
+		"Docs" : [
+			"poster;posting;placard;notice;bill;card",
+			"book"
+		],
+		"Art": [
+			"painting;picture",
+			"sculpture",
+			"vase"
+		]
+	}
+
+}
