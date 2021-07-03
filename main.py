@@ -1,5 +1,5 @@
 import argparse
-from src.sorters.Categorizer import Categorizer
+from src.sorters.categorizer import Categorizer
 
 sorter_classes = {
     'categorize': Categorizer,
