@@ -1,11 +1,11 @@
-import tensorflow as tf
 import numpy as np
 from PIL import Image
 import pandas as pd
+import tensorflow as tf
 from plotters import visualize_segmentation
-
-MODEL_PATH = "model/lite-model_deeplabv3-xception65-ade20k_1_default_2.tflite"
-LABELS_PATH = "models/labels.csv"
+import config
+from containers import PhotoObjects
+import cv2
 
 
 class SegmentationModel:
@@ -58,6 +58,11 @@ if __name__ == "__main__":
 	with tf.io.gfile.GFile(image_path, 'rb') as f:
 		image = Image.open(f)
 
-	model = SegmentationModel(MODEL_PATH, LABELS_PATH)
+	# TODO: add processing for image batches
+
+	model = SegmentationModel(config.MODEL_PATH, config.LABELS_PATH)
 	seg_map = model.segment_image(image)
 	visualize_segmentation(image, seg_map, model.label_names)
+
+	photo = PhotoObjects(seg_map, model.label_names)
+	visualize_segmentation(image, photo.seg_map, model.label_names)
