@@ -1,7 +1,8 @@
 import argparse
+from src.sorters.Categorizer import Categorizer
 
 sorter_classes = {
-    'categorize': None,
+    'categorize': Categorizer,
     'find_people': None,
     'time': None
 }
