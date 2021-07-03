@@ -7,12 +7,29 @@ import seaborn as sns
 import csv
 import time
 import pickle
+from sklearn.cluster import KMeans
+
+def read_data(dataset_path:str, num_classes:int):
+		X = []
+		Y = []
+		with open(dataset_path, newline='\n') as csv_file:
+			reader = csv.reader(csv_file, delimiter=',')
+			for row in reader:
+				if len(row) == 0:
+					continue
+				row = np.array(row, dtype="float32")
+				# first element is a class id and all the rest is a feature vector
+				if int(row[0]) < num_classes:
+					Y.append(int(row[0]))
+					X.append(row[1:])
+		return np.array(X), np.array(Y)
+
 
 class LogRegression:
-	CLASSES_DICT = ["People", "Contryside", "Urban", "Flowers", "Animals", "Art", "Docs", "Food", "other"]
+	CLASSES_DICT = ["People", "Contryside", "Urban", "Flowers", "Animals", "Art", "Docs", "Food"]
 
 	def __init__(self, dataset_path:str):
-		X, y = self._read_data_(dataset_path)
+		X, y = read_data(dataset_path, len(self.CLASSES_DICT))
 		self.X_train, self.X_test, self.y_train, self.y_test = \
 			train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
 		self.classes_num = len(np.unique(self.y_test))
@@ -51,31 +68,18 @@ class LogRegression:
 		plt.title(all_sample_title, size = 15)
 		plt.show()
 
-	def _read_data_(self, dataset_path:str):
-		X = []
-		Y = []
-		with open(dataset_path, newline='\n') as csv_file:
-			reader = csv.reader(csv_file, delimiter=',')
-			for row in reader:
-				if len(row) == 0:
-					continue
-				row = np.array(row, dtype="float32")
-				# first element is a class id and all the rest is a feature vector
-				if int(row[0]) < len(self.CLASSES_DICT):
-					Y.append(int(row[0]))
-					X.append(row[1:])
-		return np.array(X), np.array(Y)
-
-	def save(self):
-		pass
+	def save(self, filename):
+		# save the model to the filename
+		pickle.dump(self.log_reg, open(filename, 'wb'))
 
 	def read(self, filename):
-		pass
+		# load the model from the filename
+		self.log_reg = pickle.load(open(filename, 'rb'))
+
 
 
 if __name__ == "__main__":
 	DATASET_PATH = "dataset\labeled_dataset.csv"
-	# DATASET_PATH = "dataset.csv"
 	model = LogRegression(DATASET_PATH)
 	model.fit()
 	model.test_prediction()

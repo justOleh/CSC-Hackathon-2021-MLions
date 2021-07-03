@@ -1,3 +1,3 @@
 from .photo_objects import *
-from .classifier import *
+from .dataset import *
 from .regression import LogRegression
