@@ -36,5 +36,5 @@ class TimeSorter(AbstractSorter):
 
 
 if __name__ == '__main__':
-    time_sorter = TimeSorter('../../data/image_samples', '../../data/test_time')
+    time_sorter = TimeSorter('../../data/image_samples/test_duplicates', '../../data/test_time')
     time_sorter.process()
