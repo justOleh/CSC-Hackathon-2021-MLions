@@ -40,7 +40,7 @@ class InferenceModel:
         return model_ft
 
     def _preprocess_img(self, img: np.ndarray) -> torch.Tensor:
-        return torch.unsqueeze(self.transforms_f(img), dim=0)
+        return torch.unsqueeze(self.transforms_f(img), dim=0).to(self.device)
 
 
 class BlurRemoval(AbstractPostProcessor):
