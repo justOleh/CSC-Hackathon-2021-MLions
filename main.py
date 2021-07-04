@@ -1,22 +1,26 @@
 import argparse
+
 from src.sorters import segmentator
 from src.sorters.categorizer import Categorizer
 from src.sorters.segmentator import Segmentator
 from src.sorters.people_finder import PeopleFinder
 from src.sorters.dummy import DummySorter
+from src.sorters.time_sorter import TimeSorter
+from src.sorters.duplicate_sorter import DuplicateSorter
+
 from src.post_processors.blur_removal import BlurRemoval
 from src.post_processors.dummy import DummyPostProcessor
 
 sorter_classes = {
     'categorize': Categorizer,
-    'segment' : Segmentator,
+    'segment': Segmentator,
     'find_people': PeopleFinder,
-    'time': None,
+    'time': TimeSorter,
     'None': DummySorter,
 }
 
 post_processing_classes = {
-    'duplicates': None,
+    'duplicates': DuplicateSorter,
     'blur': BlurRemoval,
     'None': DummyPostProcessor,
 }
