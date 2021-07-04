@@ -3,6 +3,7 @@ import torch
 from PIL import Image
 import cv2 as cv
 import numpy as np
+import os
 # from typing import []
 
 from src.post_processors.abstract import AbstractPostProcessor
@@ -24,12 +25,12 @@ class InferenceModel:
         self.model.eval()
 
     def __call__(self, img: [np.ndarray, str]) -> str:
-        if (type(img) is str):
-            img = cv.imread(img)
+        # if (type(img) is str):
+        #     img = cv.imread(img)
         img_norm = self._preprocess_img(img)
         img_norm = img_norm.to(self.device)
         logits = self.model(img_norm)
-        class_id = torch.argmax(logits)
+        class_id = torch.argmax(logits).numpy()
         return self.classes[class_id]
 
     def _def_model(self) -> torch.nn.Module:
@@ -45,11 +46,16 @@ class InferenceModel:
 class BlurRemoval(AbstractPostProcessor):
     def __init__(self, input_path: str, output_path: str, config_path: str = 'configs/blur_removal.yml'):
         super().__init__(input_path, output_path, config_path)
+        self.res_folder_name = self.input_path / 'blurred'
+        os.makedirs(self.res_folder_name, exist_ok=True)
 
         self.model = InferenceModel(self.config['weights'])
 
     def process(self):
-        images_path = [file for file in self.input_path.glob("**/*") if file.is_file()]
+        images_path = [file for file in self.input_path.glob("**/*")
+                       if 'png' in str(file) or 'jpg' in str(file) or 'jpeg' in str(file)]
         for idx, image_path in enumerate(images_path):
             img = cv.imread(str(image_path))
-            print(image_path, self.model(img))
+            img_class = self.model(img)
+            if img_class == 'blur':
+                os.rename(image_path, self.res_folder_name/image_path.name)
