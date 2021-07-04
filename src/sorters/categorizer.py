@@ -1,11 +1,12 @@
 import os.path
+from shutil import copyfile
 
 import cv2
 import numpy as np
 import joblib
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import preprocess_input
-from shutil import copyfile
+from tqdm import tqdm
 
 from src.sorters.abstract import AbstractSorter
 
@@ -27,10 +28,11 @@ class Categorizer(AbstractSorter):
         model = tf.keras.Model(inputs=backbone.inputs, outputs=backbone.layers[-2].output)
         clusterer = joblib.load(self.config['clusterer_path'])
         num_clusters = self.config['num_clusters']
-        data_loader = tf.data.Dataset.list_files(os.path.join(self.input_path, '*.jpg'))
+        data_loader = tf.data.Dataset.list_files(os.path.join(self.input_path, '*'))
 
         imgs, features = [], []
-        for image, _ in data_loader.map(prepare_example_wrap):
+        print('Processing image features...')
+        for image, _ in tqdm(data_loader.map(prepare_example_wrap)):
             image, feats = image.numpy(), self._extract_features(model, image)
             imgs.append(image)
             features.append(feats[0])
@@ -38,9 +40,10 @@ class Categorizer(AbstractSorter):
         features = np.array(features)
         preds = clusterer.predict(features) 
 
+        print('Clusterring images...')
         img_paths = np.array([fp.numpy().decode() for fp in data_loader])
         clusters = []
-        for cluster_id in range(num_clusters):
+        for cluster_id in tqdm(range(num_clusters)):
             cluster_image_paths = img_paths[preds == cluster_id]
             if cluster_image_paths.shape[0] == 0:
                 continue
@@ -51,8 +54,8 @@ class Categorizer(AbstractSorter):
                 if not os.path.exists(dst_dir):
                     os.mkdir(dst_dir)
                 copyfile(fp, os.path.join(dst_dir, fname))
-            # clusters.append(cluster_image_paths.tolist())
-#             TODO: copy files from cluster_image_paths to target directory
+            clusters.append(cluster_image_paths.tolist())
+        print('Done.')
         return clusters
 
     @staticmethod
