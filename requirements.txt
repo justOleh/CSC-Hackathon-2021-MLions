@@ -1,5 +1,6 @@
 torchvision
-torch
+torch==1.9.0
 opencv-python
 numpy
+Pillow==8.2.0
 PyYAML==5.4.1

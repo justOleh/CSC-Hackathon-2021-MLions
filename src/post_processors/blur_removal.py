@@ -1,14 +1,15 @@
-from torchvision import datasets, models, transforms
+from torchvision import models, transforms
 import torch
 from PIL import Image
 import cv2 as cv
 import numpy as np
+# from typing import []
 
 from src.post_processors.abstract import AbstractPostProcessor
 
 
 class InferenceModel:
-    transforms = transforms.Compose([
+    transforms_f = transforms.Compose([
              Image.fromarray,
              transforms.Resize((224, 224)),
              transforms.ToTensor(),
@@ -22,7 +23,9 @@ class InferenceModel:
         self.model.load_state_dict(torch.load(model_weights_path, map_location=self.device))
         self.model.eval()
 
-    def __call__(self, img: np.ndarray) -> str:
+    def __call__(self, img: [np.ndarray, str]) -> str:
+        if (type(img) is str):
+            img = cv.imread(img)
         img_norm = self._preprocess_img(img)
         img_norm = img_norm.to(self.device)
         logits = self.model(img_norm)
@@ -36,7 +39,7 @@ class InferenceModel:
         return model_ft
 
     def _preprocess_img(self, img: np.ndarray) -> torch.Tensor:
-        return self.transforms(img)
+        return torch.unsqueeze(self.transforms_f(img), dim=0)
 
 
 class BlurRemoval(AbstractPostProcessor):
@@ -46,4 +49,7 @@ class BlurRemoval(AbstractPostProcessor):
         self.model = InferenceModel(self.config['weights'])
 
     def process(self):
-        pass
+        images_path = [file for file in self.input_path.glob("**/*") if file.is_file()]
+        for idx, image_path in enumerate(images_path):
+            img = cv.imread(str(image_path))
+            print(image_path, self.model(img))
