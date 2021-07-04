@@ -1,4 +1,7 @@
 from pathlib import Path
+import shutil
+
+from PIL import Image
 
 from src.sorters.abstract import AbstractSorter
 from utils.meta_data import get_date_taken, get_exif_data
@@ -9,13 +12,15 @@ class TimeSorter(AbstractSorter):
         super().__init__(input_path, output_path)
 
     def process(self):
-        def comparator(x):
-            time = get_date_taken(get_exif_data(x[0]))
-            return time
+        images_time = []
+        for file_name in self.file_names:
+            image = Image.open(Path(self.input_path) / file_name)
+            time = get_date_taken(get_exif_data(image))
+            images_time.append(time)
 
-        sorted_data = sorted(zip(self.images, self.file_names), key=comparator)
-        for image, file_name in sorted_data:
-            image.save(Path(self.output_path) / file_name)
+        sorted_file_names = sorted(zip(images_time, self.file_names))
+        for _, file_name in sorted_file_names:
+            shutil.copy(Path(self.input_path) / file_name, self.output_path)
 
 
 if __name__ == '__main__':
