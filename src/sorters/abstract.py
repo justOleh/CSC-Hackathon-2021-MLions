@@ -13,6 +13,7 @@ class AbstractSorter(ABC):
         self.file_names = self.get_file_names(self.input_path)
         self.images = self.load_images(self.input_path, self.file_names)
         self.output_path = output_path
+        Path(self.output_path).mkdir(parents=True, exist_ok=True)
         self.config_path = config_path
         if config_path is not None:
             self.config = self.load_config(config_path)
