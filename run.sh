@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # /conda/envs/some_env/bin/python
