@@ -2,30 +2,37 @@ import argparse
 from src.sorters import segmentator
 from src.sorters.categorizer import Categorizer
 from src.sorters.segmentator import Segmentator
+from src.sorters.dummy import DummySorter
+from src.post_processors.blur_removal import BlurRemoval
+from src.post_processors.dummy import DummyPostProcessor
 
 sorter_classes = {
     'categorize': Categorizer,
     'segment' : Segmentator,
     'find_people': None,
     'time': None,
-    'None': None
+    'None': DummySorter
 }
 
 post_processing_classes = {
     'duplicates': None,
-    'blur': None,
-    'None': None
+    'blur': BlurRemoval,
+    'None': DummyPostProcessor
 }
 
 
 def main(args: dict):
+    print('Initialization...')
     sorter_class = sorter_classes[args['mode']]
     post_processing_class = post_processing_classes[args['post_process']]
     sorter = sorter_class(args['input_path'], args['output_path'])
-    # post_processor = post_processing_class(args['output_path'], args['output_path'])
+    post_processor = post_processing_class(args['output_path'], args['output_path'])
 
+    print('Start processing')
     sorter.process()
-    # post_processor.process()
+    print('Main method finished')
+    post_processor.process()
+    print('Post processing finished')
 
 
 if __name__ == '__main__':
