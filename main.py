@@ -19,10 +19,11 @@ def main(args: dict):
     sorter_class = sorter_classes[args['mode']]
     post_processing_class = post_processing_classes[args['post_process']]
     sorter = sorter_class(args['input_path'], args['output_path'])
-    post_processor = post_processing_class(args['output_path'], args['output_path'])
-
+    
     sorter.process()
-    post_processor.process()
+    if post_processing_class:
+        post_processor = post_processing_class(args['output_path'], args['output_path'])
+        post_processor.process()
 
 
 if __name__ == '__main__':
@@ -34,6 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('--post_process', required=False, default='None', choices=['duplicates', 'blur', 'None'])
 
     args = parser.parse_args()
+    print(args)
     args = vars(args)
 
     main(args)

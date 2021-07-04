@@ -5,7 +5,7 @@ import numpy as np
 import joblib
 import tensorflow as tf
 from tensorflow.keras.applications.vgg16 import preprocess_input
-
+from shutil import copyfile
 
 from src.sorters.abstract import AbstractSorter
 
@@ -44,7 +44,14 @@ class Categorizer(AbstractSorter):
             cluster_image_paths = img_paths[preds == cluster_id]
             if cluster_image_paths.shape[0] == 0:
                 continue
-            clusters.append(cluster_image_paths.tolist())
+            
+            for fp in cluster_image_paths.tolist():
+                fname = os.path.split(fp)[1]
+                dst_dir = os.path.join(self.output_path, str(cluster_id))
+                if not os.path.exists(dst_dir):
+                    os.mkdir(dst_dir)
+                copyfile(fp, os.path.join(dst_dir, fname))
+            # clusters.append(cluster_image_paths.tolist())
 #             TODO: copy files from cluster_image_paths to target directory
         return clusters
 
