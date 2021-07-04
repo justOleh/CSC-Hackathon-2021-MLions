@@ -1,5 +1,7 @@
 import argparse
+from src.sorters import segmentator
 from src.sorters.categorizer import Categorizer
+from src.sorters.segmentator import Segmentator
 from src.sorters.people_finder import PeopleFinder
 from src.sorters.dummy import DummySorter
 from src.post_processors.blur_removal import BlurRemoval
@@ -7,6 +9,7 @@ from src.post_processors.dummy import DummyPostProcessor
 
 sorter_classes = {
     'categorize': Categorizer,
+    'segment' : Segmentator,
     'find_people': PeopleFinder,
     'time': None,
     'None': DummySorter,
@@ -37,7 +40,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_path', required=True)
     parser.add_argument('--output_path', required=True)
-    parser.add_argument('--mode', required=True, choices=['categorize', 'find_people', 'time', 'None'],
+    parser.add_argument('--mode', required=True, choices=['categorize', 'segment', 'find_people', 'time', 'None'],
                         help='indicates which of the main methods should be used')
     parser.add_argument('--post_process', required=False, default='None', choices=['duplicates', 'blur', 'None'])
 
