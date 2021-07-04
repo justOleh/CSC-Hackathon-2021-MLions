@@ -1,4 +1,5 @@
-PyYAML==5.4.1
+torchvision
 torch
 opencv-python
 numpy
+PyYAML==5.4.1

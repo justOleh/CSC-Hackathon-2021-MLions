@@ -1,1 +1,1 @@
-weights: path_to_weights
+weights: data/weights/blur_classifier.pth
