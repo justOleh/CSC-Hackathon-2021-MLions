@@ -1,20 +1,21 @@
 import argparse
 from src.sorters.categorizer import Categorizer
+from src.sorters.people_finder import PeopleFinder
 from src.sorters.dummy import DummySorter
 from src.post_processors.blur_removal import BlurRemoval
 from src.post_processors.dummy import DummyPostProcessor
 
 sorter_classes = {
     'categorize': Categorizer,
-    'find_people': None,
+    'find_people': PeopleFinder,
     'time': None,
-    'None': DummySorter
+    'None': DummySorter,
 }
 
 post_processing_classes = {
     'duplicates': None,
     'blur': BlurRemoval,
-    'None': DummyPostProcessor
+    'None': DummyPostProcessor,
 }
 
 
