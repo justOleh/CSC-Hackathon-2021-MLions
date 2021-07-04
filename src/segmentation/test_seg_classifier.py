@@ -1,6 +1,7 @@
-from .segmentation import SegmentationModel
-from .classification import PhotoObjects
-from .classification import create_dataset, LogRegression
+from .model import SegmentationModel
+from .photo_objects import PhotoObjects
+from .regression import LogRegression
+from .dataset import create_dataset
 from utils import visualize_segmentation
 from PIL import Image
 import tensorflow as tf

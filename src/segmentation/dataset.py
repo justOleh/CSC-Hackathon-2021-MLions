@@ -5,7 +5,7 @@ import os
 from PIL import Image
 
 from .photo_objects import PhotoObjects
-from segmentation import SegmentationModel
+from .model import SegmentationModel
 import config
 import csv
 from tqdm import tqdm
