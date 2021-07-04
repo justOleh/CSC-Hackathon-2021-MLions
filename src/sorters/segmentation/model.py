@@ -19,6 +19,7 @@ class SegmentationModel:
 		labels_list = list(labels_info['Name'])
 		labels_list.insert(0, 'other')
 		self.label_names = np.asarray(labels_list)
+		self._interpreter_invoked_=False
 
 
 	def segment_image(self, img:np.ndarray) -> np.ndarray:
@@ -28,7 +29,9 @@ class SegmentationModel:
 		img_width, img_height = img.size
 		input_img = self._preprocess_image_(img)
 		self.interpreter.set_tensor(self._input_details[0]['index'], input_img)
+		# if not self._interpreter_invoked_:
 		self.interpreter.invoke()
+		# self._interpreter_invoked_ = True
 
 		predictions = self.interpreter.tensor(
 			self.interpreter.get_output_details()[0]['index']
