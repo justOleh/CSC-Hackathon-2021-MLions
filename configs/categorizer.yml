@@ -1,2 +1,5 @@
 clusterer_path: 'models/conv-net-feats-clusterer.joblib'
 num_clusters: 19
+segmentator_path: 'models/lite-model_deeplabv3-mobilenetv2-ade20k_1_default_2.tflite'
+labels_path: 'models/labels.csv'
+logreg_path: 'models/regression_model.sav'

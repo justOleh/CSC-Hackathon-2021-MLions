@@ -1,16 +1,16 @@
 import os.path
-import cv2
 import numpy as np
-import joblib
-from six import class_types
 import tensorflow as tf
+from PIL import Image
+import shutil
+from collections import Counter
 
 from src.sorters.abstract import AbstractSorter
+from src.sorters.categorizer import Categorizer
+import src.sorters.segmentation as seg
 
-from .  import segmentation as seg
 
-
-class Segmentator(AbstractSorter):
+class Segmentator(Categorizer):
 	def __init__(self, input_path: str, output_path: str, config_path: str = 'configs/categorizer.yml'):
 		super().__init__(input_path, output_path, config_path)
 	
@@ -18,24 +18,26 @@ class Segmentator(AbstractSorter):
 		model = seg.SegmentationModel(self.config['segmentator_path'], self.config['labels_path'])
 		log_reg_model = seg.LogRegression()
 		log_reg_model.load(self.config['logreg_path'])
-			
-		data_loader = tf.data.Dataset.list_files(os.path.join(self.input_path, '*.jpg'))
-		imgs, feature_vectors, img_types = [], [], []
-		for image, _ in data_loader.map(prepare_example_wrap):
-			image, feature_vectors = image.numpy(), model.segment_image(image)
-			img_type = log_reg_model.predict(feature_vectors)
-			imgs.append(image)
-			features.append(feature_vectors[0])
-			img_types.append(img_type)
+		clusters = super().process()
+		random_num = 3
 
-		img_types = np.array(img_types, dtype="int8")
-
-		img_paths = np.array([fp.numpy().decode() for fp in data_loader])
-		img_class_sorted = {}
-		for type_id in range(log_reg_model.classes_num):
-			class_image_paths = img_paths[type_id == img_types]
-			if class_image_paths.shape[0] == 0:
-				continue
-			img_class_sorted[log_reg_model.get_name(type_id)] = class_image_paths.tolist()
-
-		return img_class_sorted
+		img_cluster_named = {}
+		for img_cluster in clusters:
+			cluster_ids = np.randint(0, len(img_cluster), random_num)
+			cluster_ids = np.unique(cluster_ids)
+			feature_vectors, img_types = [], []
+			for cluster_id in cluster_ids:
+				with tf.io.gfile.GFile(img_cluster[cluster_id], 'rb') as f:
+					image = Image.open(f)
+				feature, img_type = model.segment_image(image), log_reg_model.predict(feature)
+				feature_vectors.append(feature)
+				img_types.append(img_type)
+			determined_classes = [count for item, count in Counter(img_types).items()]
+			determined_id = np.argmax(np.array(determined_classes))
+			cluster_name = log_reg_model.get_name(img_types[determined_id])
+			img_cluster_named[cluster_name] = img_cluster
+			# TODO: store data into folders
+			# save the cluster to the directory
+			dst_path = os.path.join(self.output_path, cluster_name)
+			for img_file in cluster_id:
+				shutil.copy(img_file, dst_path)
