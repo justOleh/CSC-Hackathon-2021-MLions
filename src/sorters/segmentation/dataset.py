@@ -4,8 +4,8 @@ import tensorflow as tf
 import os
 from PIL import Image
 
-from .photo_objects import PhotoObjects
-from .model import SegmentationModel
+from photo_objects import PhotoObjects
+from model import SegmentationModel
 import config
 import csv
 from tqdm import tqdm

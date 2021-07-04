@@ -28,13 +28,14 @@ def read_data(dataset_path:str, num_classes:int):
 class LogRegression:
 	CLASSES_DICT = ["People", "Contryside", "Urban", "Flowers", "Animals", "Art", "Docs", "Food"]
 
-	def __init__(self, dataset_path:str):
+	def __init__(self):
+		self.log_reg = None
+
+	def fit(self, dataset_path:str):
 		X, y = read_data(dataset_path, len(self.CLASSES_DICT))
 		self.X_train, self.X_test, self.y_train, self.y_test = \
 			train_test_split(X, y, test_size=0.2, random_state=42, shuffle=True)
 		self.classes_num = len(np.unique(self.y_test))
-
-	def fit(self):
 		# Initializing Logistic Regression object
 		self.log_reg = LogisticRegression(n_jobs=-1)
 		print("Training the model")
@@ -46,14 +47,27 @@ class LogRegression:
 		print(f"Accuracy on test dataset: {self.score*100} %")
 
 	def test_prediction(self):
+		if self.log_reg is None:
+			return
 		indexes = np.random.randint(0, self.X_test.shape[0], size=10)
 		print("Random test predictions:")
 		for index in indexes:
 			pred = self.log_reg.predict(self.X_test[index].reshape(1,-1))
 			print('Predicted:', self.CLASSES_DICT[pred[0]], \
 				'Actual:', self.CLASSES_DICT[self.y_test[index]])
+	
+	def predict(self, val):
+		if self.log_reg is None:
+			return
+		return self.log_reg.predict(val)
+	
+	def get_class(self, id) -> str:
+		if id < self.classes_num:
+			return self.CLASSES_DICT[id]
 
 	def confusion_matrix(self):
+		if self.log_reg is None:
+			return
 		predictions = self.log_reg.predict(self.X_test)
 
 		# Calculate confusion matrix
@@ -72,15 +86,16 @@ class LogRegression:
 		# save the model to the filename
 		pickle.dump(self.log_reg, open(filename, 'wb'))
 
-	def read(self, filename):
+	def load(self, filename):
 		# load the model from the filename
 		self.log_reg = pickle.load(open(filename, 'rb'))
+		self.classes_num = len(self.CLASSES_DICT)
 
 
 
 if __name__ == "__main__":
 	DATASET_PATH = "dataset\labeled_dataset.csv"
-	model = LogRegression(DATASET_PATH)
-	model.fit()
+	model = LogRegression()
+	model.fit(DATASET_PATH)
 	model.test_prediction()
 	model.confusion_matrix()
