@@ -19,13 +19,17 @@ post_processing_classes = {
 
 
 def main(args: dict):
+    print('Initialization...')
     sorter_class = sorter_classes[args['mode']]
     post_processing_class = post_processing_classes[args['post_process']]
     sorter = sorter_class(args['input_path'], args['output_path'])
     post_processor = post_processing_class(args['output_path'], args['output_path'])
 
+    print('Start processing')
     sorter.process()
+    print('Main method finished')
     post_processor.process()
+    print('Post processing finished')
 
 
 if __name__ == '__main__':
