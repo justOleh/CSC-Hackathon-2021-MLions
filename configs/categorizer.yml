@@ -1,0 +1,2 @@
+clusterer_path: 'models/conv-net-feats-clusterer.joblib'
+num_clusters: 19
