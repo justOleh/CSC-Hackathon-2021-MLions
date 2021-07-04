@@ -30,7 +30,6 @@ class DuplicateSorter(AbstractSorter):
             used[i] = 1
             for j in range(image_num):
                 if used[j] == 0:
-                    print(images_hashes[i] - images_hashes[j])
                     if images_hashes[i] - images_hashes[j] < threshold:
                         duplicates_images_idx.append(j)
                         used[j] = 1
@@ -45,5 +44,5 @@ class DuplicateSorter(AbstractSorter):
 
 
 if __name__ == '__main__':
-    time_sorter = DuplicateSorter('../../data/image_samples', '../../data/test_duplicates')
+    time_sorter = DuplicateSorter('../../data/image_samples/test_duplicates', '../../data/test_duplicates')
     time_sorter.process()
