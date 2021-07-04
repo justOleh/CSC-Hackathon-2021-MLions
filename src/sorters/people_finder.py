@@ -64,10 +64,10 @@ class PeopleFinder(AbstractSorter):
             # print(roi)
             # self.imshow(roi)
             descriptor = self._calc_description(roi)
-            print(descriptor)
+            # print(descriptor)
             images_path_cluster.append(image_path)
             descriptors.append(descriptor)
-        print(descriptors)
+        # print(descriptors)
 
         #calc distances, find nearest and group
         clusters = []
@@ -79,7 +79,7 @@ class PeopleFinder(AbstractSorter):
                 if i == j:
                     j += 1
                     continue
-                print(self._calc_distance(descriptors[i], descriptors[j]))
+                # print(self._calc_distance(descriptors[i], descriptors[j]))
                 if self._calc_distance(descriptors[i], descriptors[j]) <= self.dist_threshold:
                     cluster.append(images_path_cluster[j])
                     del descriptors[j]
@@ -88,7 +88,7 @@ class PeopleFinder(AbstractSorter):
                     j += 1
             clusters.append(cluster)
             i += 1
-        print(clusters)
+        # print(clusters)
 
         #move clusters to folders
         for idx, cluster in enumerate(clusters):
