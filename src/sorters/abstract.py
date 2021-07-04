@@ -14,8 +14,8 @@ class AbstractSorter(ABC):
         self.file_names = self.get_file_names(self.input_path)
         self.output_path = Path(output_path)
         Path(self.output_path).mkdir(parents=True, exist_ok=True)
-        self.config_path = Path(config_path)
         if config_path is not None:
+            self.config_path = Path(config_path)
             self.config = self.load_config(config_path)
 
     @staticmethod
@@ -25,7 +25,7 @@ class AbstractSorter(ABC):
             return config
 
     @staticmethod
-    def get_file_names(input_path: str) -> List[str]:
+    def get_file_names(input_path: Path) -> List[str]:
         return [str(file.name) for file in Path(input_path).glob('*')]
 
     @abstractmethod
